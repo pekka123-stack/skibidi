@@ -1,0 +1,130 @@
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local AudioIdBox = Instance.new("TextBox")
+local FetchButton = Instance.new("TextButton")
+local DistortionLabel = Instance.new("TextLabel")
+-- local DistortionSlider = Instance.new("Slider") -- Uncomment if Slider exists in executor
+local PitchLabel = Instance.new("TextLabel")
+-- local PitchSlider = Instance.new("Slider") -- Uncomment if Slider exists in executor
+local TimeLabel = Instance.new("TextLabel")
+-- local TimeSlider = Instance.new("Slider") -- Uncomment if Slider exists in executor
+local PlayButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "BoomboxGUI"
+
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 300, 0, 400)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -200)
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame.Name = "MainFrame"
+
+Title.Parent = Frame
+Title.Size = UDim2.new(0, 300, 0, 50)
+Title.Text = "Boombox GUI"
+Title.Font = Enum.Font.SourceSans
+Title.TextSize = 24
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
+AudioIdBox.Parent = Frame
+AudioIdBox.Size = UDim2.new(0, 200, 0, 30)
+AudioIdBox.Position = UDim2.new(0, 50, 0, 60)
+AudioIdBox.PlaceholderText = "Enter Audio ID"
+AudioIdBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+AudioIdBox.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+FetchButton.Parent = Frame
+FetchButton.Size = UDim2.new(0, 200, 0, 30)
+FetchButton.Position = UDim2.new(0, 50, 0, 100)
+FetchButton.Text = "Fetch Audio"
+FetchButton.BackgroundColor3 = Color3.fromRGB(100, 150, 100)
+FetchButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+DistortionLabel.Parent = Frame
+DistortionLabel.Position = UDim2.new(0, 50, 0, 140)
+DistortionLabel.Text = "Distortion"
+DistortionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+--[[ Uncomment if Slider exists
+DistortionSlider.Parent = Frame
+DistortionSlider.Position = UDim2.new(0, 50, 0, 160)
+DistortionSlider.Size = UDim2.new(0, 200, 0, 20)
+DistortionSlider.MinValue = 0
+DistortionSlider.MaxValue = 100
+--]]
+
+PitchLabel.Parent = Frame
+PitchLabel.Position = UDim2.new(0, 50, 0, 190)
+PitchLabel.Text = "Pitch"
+PitchLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+--[[ Uncomment if Slider exists
+PitchSlider.Parent = Frame
+PitchSlider.Position = UDim2.new(0, 50, 0, 210)
+PitchSlider.Size = UDim2.new(0, 200, 0, 20)
+PitchSlider.MinValue = 0.5
+PitchSlider.MaxValue = 2
+--]]
+
+TimeLabel.Parent = Frame
+TimeLabel.Position = UDim2.new(0, 50, 0, 240)
+TimeLabel.Text = "Time Position (0 to 7 min)"
+TimeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+--[[ Uncomment if Slider exists
+TimeSlider.Parent = Frame
+TimeSlider.Position = UDim2.new(0, 50, 0, 260)
+TimeSlider.Size = UDim2.new(0, 200, 0, 20)
+TimeSlider.MinValue = 0
+TimeSlider.MaxValue = 420 -- 7 minutes in seconds
+--]]
+
+PlayButton.Parent = Frame
+PlayButton.Size = UDim2.new(0, 200, 0, 30)
+PlayButton.Position = UDim2.new(0, 50, 0, 300)
+PlayButton.Text = "Play Audio"
+PlayButton.BackgroundColor3 = Color3.fromRGB(150, 100, 100)
+PlayButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+-- Script to handle button clicks and sliders
+local Sound = Instance.new("Sound")
+Sound.Parent = game.Workspace
+
+local function fetchAudio()
+    local audioId = tonumber(AudioIdBox.Text)
+    if audioId then
+        Sound.SoundId = "rbxassetid://" .. audioId
+        print("Fetched audio with ID:", audioId)
+    else
+        print("Invalid Audio ID")
+    end
+end
+
+local function playAudio()
+    Sound:Play()
+    print("Playing audio...")
+end
+
+-- Uncomment if Slider exists and supports ValueChanged events
+--[[ 
+local function updateDistortion()
+    Sound.DistortionLevel = DistortionSlider.Value / 100 -- normalize to 0-1 range
+end
+
+local function updatePitch()
+    Sound.PlaybackSpeed = PitchSlider.Value -- value based on slider (e.g., 0.5 to 2)
+end
+
+local function updateTimePosition()
+    Sound.TimePosition = TimeSlider.Value
+end
+
+DistortionSlider.ValueChanged:Connect(updateDistortion)
+PitchSlider.ValueChanged:Connect(updatePitch)
+TimeSlider.ValueChanged:Connect(updateTimePosition)
+--]]
+
+FetchButton.MouseButton1Click:Connect(fetchAudio)
+PlayButton.MouseButton1Click:Connect(playAudio)
